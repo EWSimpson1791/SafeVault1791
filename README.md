@@ -4,7 +4,7 @@
 > featuring ASCII map rendering, an event log, AI harness, and a
 > Phase-3B UI augmentation layer.
 
-[![Phase-3B Integration CI](https://github.com/YOUR_GITHUB_USERNAME/Risk_Battle_Game_A/actions/workflows/phase3_integration.yml/badge.svg)](https://github.com/YOUR_GITHUB_USERNAME/Risk_Battle_Game_A/actions/workflows/phase3_integration.yml)
+[![Phase-3B Integration CI](https://github.com/EWSimpson1791/Risk_Battle_Game_A/actions/workflows/phase3_integration.yml/badge.svg)](https://github.com/EWSimpson1791/Risk_Battle_Game_A/actions/workflows/phase3_integration.yml)
 [![Python](https://img.shields.io/badge/python-3.9%2B-blue)](https://www.python.org/)
 [![pytest](https://img.shields.io/badge/tests-10%2F10%20passing-brightgreen)](tests/test_ui_game_loop_phase3.py)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
@@ -94,7 +94,7 @@ Risk_Battle_Game_A/
 
 ```powershell
 # 1. Clone the repository
-git clone https://github.com/YOUR_GITHUB_USERNAME/Risk_Battle_Game_A.git
+git clone https://github.com/EWSimpson1791/Risk_Battle_Game_A.git
 cd Risk_Battle_Game_A
 
 # 2. Create and activate a virtual environment (recommended)
@@ -209,7 +209,7 @@ chmod +x scripts/demo_phase3.sh && ./scripts/demo_phase3.sh --full
 
 The workflow at `.github/workflows/phase3_integration.yml` triggers on
 every push or pull request touching `ui/game_loop.py` or the Phase-3B
-test file. Replace `YOUR_GITHUB_USERNAME` in the badge URL above after
+test file. Replace `EWSimpson1791` in the badge URL above after
 pushing to GitHub.
 
 ---
