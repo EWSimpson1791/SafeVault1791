@@ -5,6 +5,32 @@ content.write('''# Changelog
 All notable changes to Risk Battle Game A are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Security-Hardening] — 2026-05-10
+
+### Security
+- Hardened `auth/auth_manager.py` with six layered brute-force controls:
+  - **PBKDF2-HMAC-SHA256** password hashing — 260,000 iterations (OWASP 2023)
+  - **Per-user 32-byte random salt** stored alongside each hash in `data/users.json`
+  - **`hmac.compare_digest`** timing-safe comparison on every login — prevents timing-based username enumeration
+  - **Dummy hash executed for unknown users** — response time is uniform whether or not the account exists
+  - **Account lockout after 5 consecutive failures** — persisted to `data/lockout_state.json` (survives restarts)
+  - **15-minute cooldown** with auto-reset on expiry — prevents permanent self-lockout
+- Added UTC failure logging to `data/auth_failures.log` with reason codes: `WRONG_PASSWORD`, `UNKNOWN_USER`, `LOCKED_OUT`
+- Excluded `data/users.json.py` from version control — credential risk (commit `83b1335`)
+- Excluded `data/lockout_state.json` and `data/auth_failures.log` from version control — runtime files must not enter git history (commit `e0eb996`)
+- Repository permanently set to **private** — brute-force attack surface in `auth/` must not be publicly accessible
+
+### Added
+- `tests/test_auth_manager.py` — 19 tests covering all 6 security controls; **19/19 passing** on Python 3.10, 3.11, 3.12 (commit `de628f5`)
+- `.github/workflows/auth_security.yml` — dedicated path-triggered CI workflow; fires on any change to `auth/**` or `tests/test_auth_manager.py`; runs the full 19-test suite on Python 3.12 (commit `0ea441d`)
+
+### Changed
+- `auth/auth_manager.py` — full rewrite; 197 lines replaced with 262-line hardened implementation; zero new dependencies (stdlib only: `hashlib`, `hmac`, `json`, `os`, `time`) (commit `530ff9d`)
+- `.github/workflows/ci.yml` — dropped EOL Python 3.8 and 3.9; added 3.11 and 3.12 to matrix; upgraded `setup-python` to v5; added explicit **Auth security suite** step that runs `test_auth_manager.py -v` on every push (commit `0ea441d`)
+
+---
+
+
 ---
 
 ## [Unreleased]
