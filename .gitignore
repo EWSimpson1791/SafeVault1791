@@ -70,3 +70,5 @@ AutoRecovery save of *.xlsx
 session_log.json
 pytest.ini.py
 run_ai_harness.py
+
+data/users.json.py
