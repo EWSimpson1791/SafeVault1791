@@ -1,0 +1,34 @@
+name: Auth Security Gate
+
+on:
+  push:
+    paths:
+      - auth/**
+      - tests/test_auth_manager.py
+  pull_request:
+    paths:
+      - auth/**
+      - tests/test_auth_manager.py
+
+jobs:
+  auth-security:
+    name: Auth security gate (19 controls)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install pytest
+        run: python -m pip install --upgrade pip && pip install pytest
+
+      - name: Run auth security suite
+        run: pytest tests/test_auth_manager.py -v --tb=short
+name: auth_security.yml
+on:
+
+jobs:
