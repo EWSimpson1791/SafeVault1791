@@ -1,0 +1,166 @@
+--- a/ui/game_loop.py
++++ b/ui/game_loop.py
+@@ -1,6 +1,42 @@
+ """
+ Minimal interactive turn loop (human-only version).
+
+ This is the clean Step 4 baseline BEFORE any AI subsystem existed.
+ """
++
++from typing import Any
++
++# ------------------------------------------------------------
++# Phase 3B UI Enhancements (safe imports)
++# ------------------------------------------------------------
++try:
++    from ui.console import color_text
++except Exception:
++    def color_text(msg: str, role: str = "info") -> str:
++        return msg
++
++try:
++    from ui.status import format_status
++except Exception:
++    def format_status(game_state: Any, current: str = "") -> str:
++        return f"Status unavailable for {current}"
++
++try:
++    from ui.ascii_map import render_ascii_map
++except Exception:
++    def render_ascii_map(game_state: Any) -> str:
++        return "ASCII map unavailable."
++
++try:
++    from engine.event_log import EventLog
++except Exception:
++    EventLog = None  # type: ignore
++
++
++def _log_event(
++    game_state: Any,
++    turn: int,
++    player: str,
++    event_type: str,
++    desc: str
++) -> None:
++    """Append an event to EventLog if available."""
++    if EventLog is None:
++        return
++
++    try:
++        EventLog(game_state).append({
++            "turn": turn,
++            "player": player,
++            "type": event_type,
++            "desc": desc,
++        })
++    except Exception:
++        pass
+
+@@ -95,6 +131,32 @@ def game_loop(game_state: Any) -> None:
+         if not cmd:
+             continue
+
++        # ----------------------------------------------------
++        # ASCII Map
++        # ----------------------------------------------------
++        if verb == "map":
++            try:
++                print(render_ascii_map(game_state))
++            except Exception:
++                print(color_text("Map not available.", "warning"))
++            continue
++
++        # ----------------------------------------------------
++        # Event Log
++        # ----------------------------------------------------
++        if verb == "log":
++            try:
++                if EventLog is None:
++                    raise RuntimeError("EventLog unavailable")
++
++                el = EventLog(game_state)
++
++                if args and args[0] == "export":
++                    print(el.export_text())
++                else:
++                    for e in el.last(10):
++                        print(
++                            f"{e.get('turn', '?')}: "
++                            f"[{e.get('player')}] "
++                            f"{e.get('type')} - {e.get('desc')}"
++                        )
++            except Exception:
++                print(color_text("No event log available.", "warning"))
++            continue
++
+         # Attack
+         if verb == "attack":
+
+@@ -137,6 +199,10 @@ def game_loop(game_state: Any) -> None:
+             if not res.get("ok"):
+                 print(f"Attack failed: {res.get('error')}")
+             else:
+-                print(f"Attack result: {res.get('result')}")
++                print(
++                    color_text(
++                        f"Attack result: {res.get('result')}",
++                        "info"
++                    )
++                )
++                _log_event(
++                    game_state,
++                    idx,
++                    current,
++                    "attack",
++                    str(res.get("result"))
++                )
++
++            # Victory check
+             if _maybe_check_victory(game_state):
+                 break
+
+@@ -176,6 +242,15 @@ def game_loop(game_state: Any) -> None:
+             if not res.get("ok"):
+                 print(f"Reinforce failed: {res.get('error')}")
+             else:
+-                print(f"Reinforce result: {res.get('result')}")
++                print(
++                    color_text(
++                        f"Reinforce result: {res.get('result')}",
++                        "info"
++                    )
++                )
++                _log_event(
++                    game_state,
++                    idx,
++                    current,
++                    "reinforce",
++                    f"Placed {armies} on {terr}"
++                )
++
++                # Remaining armies
+                 remaining = game_state["pending_reinforcements"][current]
+
+                 if remaining > 0:
+
+@@ -214,6 +289,14 @@ def game_loop(game_state: Any) -> None:
+             if not res.get("ok"):
+                 print(f"Fortify failed: {res.get('error')}")
+             else:
+-                print(f"Fortify result: {res.get('result')}")
++                print(
++                    color_text(
++                        f"Fortify result: {res.get('result')}",
++                        "info"
++                    )
++                )
++                _log_event(
++                    game_state,
++                    idx,
++                    current,
++                    "fortify",
++                    str(res.get("result"))
++                )
++
+             continue
