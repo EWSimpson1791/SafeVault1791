@@ -1,0 +1,72 @@
+# ==============================================
+# Risk_Battle_Game_A -- .gitignore
+# Python + Windows + Office + project-specific
+# ==============================================
+
+# ------ Python --------------------------------
+__pycache__/
+*.py[cod]
+*.class
+*.pyo
+*.pyd
+.Python
+build/
+dist/
+*.egg-info/
+*.egg
+MANIFEST
+
+# ------ Virtual environments -----------------
+.venv/
+venv/
+ENV/
+env/
+.env
+
+# ------ pytest / coverage --------------------
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+*.pytest_cache
+pytest.ini.py
+
+# ------ Distribution / packaging -------------
+*.whl
+*.tar.gz
+*.zip
+
+# ------ IDE -- VS Code -----------------------
+.vscode/
+*.code-workspace
+
+# ------ IDE -- PyCharm -----------------------
+.idea/
+*.iml
+
+# ------ Windows system files -----------------
+Thumbs.db
+Desktop.ini
+.BIN/
+ehthumbs.db
+
+# ------ Office & recovery files --------------
+*.docx
+*.xlsx
+*.pptx
+~$*.docx
+~$*.xlsx
+~$*.pptx
+AutoRecovery save of *.docx
+AutoRecovery save of *.xlsx
+
+# ------ Logs & temp --------------------------
+*.log
+*.tmp
+*.bak
+*.swp
+
+# ------ Project-specific ---------------------
+session_log.json
+pytest.ini.py
+run_ai_harness.py
