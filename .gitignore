@@ -72,3 +72,6 @@ pytest.ini.py
 run_ai_harness.py
 
 data/users.json.py
+
+data/lockout_state.json
+data/auth_failures.log
