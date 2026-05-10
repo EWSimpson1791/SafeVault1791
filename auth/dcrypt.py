@@ -126,7 +126,7 @@ def verify_password(password: str, stored: str) -> bool:
     bool
         True if and only if *password* matches *stored*.
     """
-    # Dummy values ensure a hash always runs — no fast-rejection path.
+    # Dummy values ensure a hash always runs -- no fast-rejection path.
     _dummy_salt   = b"\x00" * _SALT_BYTES
     _dummy_digest = _pbkdf2(b"dummy", _dummy_salt)
 
